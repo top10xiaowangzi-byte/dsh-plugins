@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "AI Idle Auto-Shutdown (Right Sidebar)",
+    "description": "Start or stop a monitor of your AI desktop apps (ChatGPT, DeepSeek, WorkBuddy, Cherry Studio, Qoder, Cursor, ...) from the right sidebar: it follows their CPU/IO activity and shuts the machine down after all of them stay idle for the configured minutes, with a dry-run mode and a cancellable countdown."
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Approval Notifier",
+    "description": "Pops a reminder card in the bottom-right corner and sends a desktop notification when an approval is pending, with Allow once / Reject right there."
+  }
+}

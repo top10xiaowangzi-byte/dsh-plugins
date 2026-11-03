@@ -1,0 +1,97 @@
+{
+  "_说明": "AI 工具空闲后自动关机 —— 配置文件。改完保存，下次点「启用」生效（正在运行的监控需要先「停止」再「启用」）。本文件由插件在首次运行时复制到数据目录（默认 %USERPROFILE%\\.dsh\\ai-idle-shutdown\\config.json），插件升级不会覆盖你改过的内容。",
+  "_判定原理": "每个 AI 工具连同它的子进程一起监控 CPU 和 IO。单次 1~2 秒的尖峰不算；只有「最近 min_busy_seconds 秒里多数采样都超阈值」才认为在真正工作（忙碌），忙碌后要「最近 min_quiet_seconds 秒基本安静」才恢复空闲。任意一个工具持续工作就重新计时；全部持续安静 idle_minutes 分钟后发出关机指令，并留 countdown_seconds 秒可取消。",
+  "targets": [
+    {
+      "name": "ChatGPT",
+      "patterns": ["ChatGPT.exe"],
+      "enabled": true,
+      "_说明": "ChatGPT 桌面版。没装就改成 false 或删掉这一项。"
+    },
+    {
+      "name": "DeepSeek",
+      "patterns": ["DeepSeek Harness.exe"],
+      "enabled": true,
+      "_说明": "DeepSeek Harness 桌面版。如果你平时用浏览器开 chat.deepseek.com，浏览器标签页无法单独识别，可以把这项改成 false（或者把浏览器进程名加进 patterns，但看视频也会被当成忙碌）。"
+    },
+    {
+      "name": "WorkBuddy",
+      "patterns": ["WorkBuddy*.exe"],
+      "enabled": true,
+      "_说明": "WorkBuddy 桌面版（含它的编辑器/Agent 辅助进程），* 是通配符。"
+    },
+    {
+      "name": "Cherry Studio",
+      "patterns": ["Cherry Studio.exe"],
+      "enabled": true,
+      "_说明": "Cherry Studio 客户端。"
+    },
+    {
+      "name": "Qoder",
+      "patterns": ["Qoder*.exe"],
+      "enabled": true,
+      "_说明": "Qoder / QoderWork 客户端，含启动器 Qoder CN Launcher.exe。"
+    },
+    {
+      "name": "WPS 灵犀",
+      "patterns": ["WPS 灵犀.exe"],
+      "enabled": true,
+      "_说明": "WPS 灵犀 AI 助手。"
+    },
+    {
+      "name": "Cursor",
+      "patterns": ["Cursor.exe"],
+      "enabled": true,
+      "_说明": "Cursor 编辑器。不想监控就改成 false。"
+    }
+  ],
+  "_单目标阈值说明": "如果某个工具（比如 WorkBuddy）空闲基线特别高、仍被误判成忙碌，可以只在它上面单独覆盖阈值：在 targets 对应项里加 \"cpu_busy_percent\": 8.0 和/或 \"io_busy_kbps\": 500，其他工具仍用全局阈值。",
+  "cpu_busy_percent": 5.0,
+  "_cpu说明": "目标进程树 CPU 合计超过单核 5% 算「这一次采样在干活」（只是候选，要持续才变忙碌）。空闲 Electron 客户端通常 0.3~3%，流式输出/Agent 执行通常 5~30%。",
+  "io_busy_kbps": 200.0,
+  "_io说明": "目标进程树 IO（含网络收发）合计超过 200 KB/s 算「这一次采样在干活」（候选信号）。空闲一般低于 60 KB/s；流式输出时可达几百 KB/s 到几 MB/s。",
+  "min_busy_seconds": 6,
+  "_忙碌持续说明": "要最近多少秒的采样大多超阈值才算真正忙碌。默认 6 秒：1~2 秒的后台心跳/动画尖峰不会重置计时。",
+  "min_quiet_seconds": 12,
+  "_安静持续说明": "忙碌后要最近多少秒基本安静才恢复空闲（避免忙碌状态抖动反复刷新面板/日志）。默认 12 秒。",
+  "busy_ratio": 0.8,
+  "_忙碌比例说明": "min_busy_seconds 窗口内「超阈值采样」占比达到多少才算持续工作。默认 0.8：按 poll_seconds=2 计算，6 秒窗口约 4 个采样，要求 4 次连续超阈值；真正连续几十秒的流式输出/Agent 执行仍能识别。",
+  "quiet_ratio": 0.25,
+  "_安静比例说明": "min_quiet_seconds 窗口内「超阈值采样」占比降到多少以下才算恢复安静。默认 0.25（空闲时偶发尖峰不会被误判成一直在工作）。",
+  "include_child_processes": true,
+  "_子进程说明": "AI 工具干活的命令（node、python、git 等）都是它的子进程，必须一起算。",
+  "treat_spawn_as_activity": false,
+  "_新进程说明": "默认 false：Electron 后台会不断拉起子进程/更新器，「出现新进程就算干活」容易误判。只有显式改成 true 时，才把 node/python/cmd/git/pwsh 这类 agent 型子进程当作候选活动，而且同样要满足上面的持续判定。",
+  "poll_seconds": 2.0,
+  "_采样说明": "每 2 秒检查一次。不建议低于 1 秒（Windows CPU 时间粒度约 15ms，采样太密 CPU% 会呈台阶状）。",
+  "idle_minutes": 15,
+  "_空闲说明": "所有 AI 工具连续安静多少分钟后关机。支持小数（如 0.5 = 30 秒）。",
+  "wait_for_first_task": true,
+  "_启动说明": "true = 先看到至少一次 AI 持续活动才开始计时，避免刚启用还没派任务就关机；想「启动后只要电脑闲着就关」可改成 false。",
+  "no_activity_warn_minutes": 60,
+  "_提醒说明": "启动后一直没检测到活动时，多久往日志里写一次提醒。",
+  "countdown_seconds": 60,
+  "_倒计时说明": "发出关机指令后的缓冲时间，期间有 AI 新活动或你动键鼠会自动取消。建议不低于 30 秒。",
+  "action": "shutdown",
+  "_动作说明": "shutdown=关机（默认）；restart=重启；sleep=睡眠；hibernate=休眠；lock=锁屏。",
+  "force_close_apps": false,
+  "_强制说明": "true 时关机加 /f 强制结束会阻止关机的程序（可能丢失 Word/WPS 未保存内容）。默认 false 更安全。",
+  "cancel_on_user_input": true,
+  "_键鼠说明": "倒计时期间检测到你动了键盘/鼠标，自动取消关机。",
+  "stop_on_user_cancel": true,
+  "_取消后说明": "因为你在用电脑而取消后，监控程序直接退出（不会过一会儿又关）。",
+  "wait_for_user_away": true,
+  "_离开说明": "安全保护：AI 安静满 idle_minutes 后，还要确认你已经离开电脑（键鼠空闲 user_away_minutes 分钟）才真正关机，避免你正在用电脑时被关掉。想「不管我在不在，时间到就关」可改成 false。",
+  "user_away_minutes": 3,
+  "_离开分钟说明": "键鼠多久没动算「离开电脑」。默认 3 分钟。",
+  "prevent_sleep": true,
+  "_防睡眠说明": "监控期间阻止 Windows 自动睡眠，否则 AI 任务会被挂起。",
+  "dry_run": false,
+  "_演练说明": "true = 只演练流程、绝不真的关机。第一次使用建议先在右侧栏勾选「演练模式（不会真的关机）」试一遍。",
+  "heartbeat_minutes": 5,
+  "_心跳说明": "每隔几分钟往日志里写一条状态。",
+  "comment": "AI 任务已全部结束，系统即将关机",
+  "log_file": "monitor.log",
+  "status_file": "status.json",
+  "stop_flag": "stop.flag"
+}

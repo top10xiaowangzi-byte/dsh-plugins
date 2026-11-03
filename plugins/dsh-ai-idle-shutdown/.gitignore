@@ -1,0 +1,9 @@
+node_modules/
+__pycache__/
+*.pyc
+status.json
+停止监控.flag
+监控日志.txt
+monitor.log
+stop.flag
+dry-run/

@@ -1,0 +1,68 @@
+{
+  "name": "dsh-approval-push",
+  "displayName": "审批提醒（弹窗 + 手机推送）",
+  "version": "1.3.0",
+  "description": "DeepSeek Harness plugin: when a session waits for permission, show an in-page card with Allow once / Reject, send an optional desktop notification and sound, and push the request to your phone through PushPlus, ServerChan, ntfy, a WeCom group robot or a custom webhook.",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "cordis",
+    "approval",
+    "notification",
+    "push",
+    "pushplus",
+    "ntfy",
+    "webhook"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./push": "./push.mjs",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
+    "./package.json": "./package.json",
+    "./cordis.patch.yml": "./cordis.patch.yml"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "push.mjs",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "README.md",
+    "LICENSE",
+    "docs/*.png",
+    "screenshots.json",
+    "icon-192.png"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "slots"
+      ]
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/top10xiaowangzi-byte/dsh-plugins.git",
+    "directory": "plugins/dsh-approval-push"
+  },
+  "homepage": "https://github.com/top10xiaowangzi-byte/dsh-plugins/tree/main/plugins/dsh-approval-push",
+  "bugs": {
+    "url": "https://github.com/top10xiaowangzi-byte/dsh-plugins/issues"
+  },
+  "author": {
+    "name": "top10xiaowangzi-byte",
+    "url": "https://github.com/top10xiaowangzi-byte"
+  }
+}

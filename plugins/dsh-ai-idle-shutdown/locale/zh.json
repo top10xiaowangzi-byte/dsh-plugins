@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "AI 工具空闲后自动关机（右侧栏）",
+    "description": "在右侧边栏一键启动/停止：监控 ChatGPT、DeepSeek、WorkBuddy、Cherry Studio、Qoder、Cursor 等 AI 桌面工具的 CPU/IO 活动，全部连续安静指定分钟数后自动关机（可演练、可取消）。"
+  }
+}

@@ -1,0 +1,10 @@
+# dsh bundle patch: inserts this plugin into a profile's layer stack.
+- insert:
+    - id: ai-idle-shutdown
+      name: dsh-ai-idle-shutdown
+      # 可选覆盖项（全部可省略，默认自动探测）：
+      #   dataDir: D:\path\to\state        # 运行时数据目录，默认 %USERPROFILE%\.dsh\ai-idle-shutdown
+      #   python: C:\Python312\python.exe    # 指定 Python 解释器（默认自动探测 3.10+）
+      #   pollMs: 500                        # Host 读取 status.json 的间隔毫秒
+      #   dryRunDefault: false               # UI 未勾选「演练模式」时的默认值
+      config: {}

@@ -1,0 +1,74 @@
+{
+  "name": "dsh-ai-idle-shutdown",
+  "displayName": "AI 工具空闲后自动关机（右侧栏）",
+  "version": "1.0.0",
+  "description": "Windows-only sidebar plugin for DeepSeek Harness: arms a monitor over your AI desktop apps (ChatGPT, DeepSeek Harness, WorkBuddy, Cherry Studio, Qoder, WPS Lingxi, Cursor, or your own list), samples each one's CPU and IO to tell whether it is still working, and shuts the machine down once all of them have been idle for a configurable number of minutes — with a cancellable countdown, a dry-run mode, and a live log of which app reset the timer.",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "cordis",
+    "auto-shutdown",
+    "shutdown",
+    "idle",
+    "power-management",
+    "windows",
+    "sidebar"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "main": "./index.mjs",
+  "exports": {
+    ".": "./index.mjs",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
+    "./package.json": "./package.json",
+    "./cordis.patch.yml": "./cordis.patch.yml"
+  },
+  "files": [
+    "index.mjs",
+    "client.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "backend/*.py",
+    "backend/config.example.json",
+    "backend/TUNING.md",
+    "README.md",
+    "LICENSE",
+    "icon-192.png"
+  ],
+  "os": [
+    "win32"
+  ],
+  "engines": {
+    "dsh": ">=0.2.1-rc.1"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-sidebar-right",
+        "@deepseek-ai/dsh-client-locale"
+      ]
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/top10xiaowangzi-byte/dsh-plugins.git",
+    "directory": "plugins/dsh-ai-idle-shutdown"
+  },
+  "homepage": "https://github.com/top10xiaowangzi-byte/dsh-plugins/tree/main/plugins/dsh-ai-idle-shutdown",
+  "bugs": {
+    "url": "https://github.com/top10xiaowangzi-byte/dsh-plugins/issues"
+  },
+  "author": {
+    "name": "top10xiaowangzi-byte",
+    "url": "https://github.com/top10xiaowangzi-byte"
+  }
+}
